@@ -10,7 +10,7 @@ public class MyLinkedList {
     }
 
     public int get(int index) {
-        if (index > size) {
+        if (index >= size) {
             System.out.println("index : " + index + " is invalid.");
             return -1;
         } else {
@@ -61,12 +61,14 @@ public class MyLinkedList {
 
     public void addAtIndex(int index, int val) {
         Node node = new Node(val);
-        if (size == 0) {
+        if (index == 0) {
             addAtHead(val);
+        } else if (size == index) {
+            addAtTail(val);
         } else {
             Node cur;
             cur = head;
-            while (index-1> 0) {
+            while (index > 0) {
                 cur = cur.next;
                 index--;
             }
@@ -75,10 +77,14 @@ public class MyLinkedList {
             node.prev = before;
             node.next = cur;
             cur.prev = node;
+            size++;
         }
     }
 
     public void deleteAtIndex(int index) {
+        if (index >= size) {
+            return;
+        }
         Node atIndex;
         atIndex = head;
         while (index > 0) {
