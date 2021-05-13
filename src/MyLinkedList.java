@@ -14,15 +14,34 @@ public class MyLinkedList {
             System.out.println("index : " + index + " is invalid.");
             return -1;
         } else {
-            Node cur;
-            cur = head;
-            while (index > 0) {
-                cur = cur.next;
-                index--;
-            }
-            return cur.val;
+            return getNode(index).val;
         }
     }
+
+    public Node getNode(int index) {
+        //traverse fowrard
+        Node cur = null;
+        int offset = 0;
+
+        if (index < size / 2) {
+            cur = head;
+            offset = index;
+            while (offset > 0) {
+                cur = cur.next;
+                offset--;
+            }
+        } else {
+            //traverse backward
+            cur = tail;
+            offset = size - 1 - index;
+            while(offset > 0) {
+                cur = cur.prev;
+                offset--;
+            }
+        }
+        return cur;
+    }
+
 
     public void addAtHead(int val) {
         Node node = new Node(val);
@@ -54,7 +73,6 @@ public class MyLinkedList {
             } else {
                 last.next = newNode;
             }
-
             size++;
         }
     }
@@ -66,12 +84,8 @@ public class MyLinkedList {
         } else if (size == index) {
             addAtTail(val);
         } else {
-            Node cur;
-            cur = head;
-            while (index > 0) {
-                cur = cur.next;
-                index--;
-            }
+            Node cur = getNode(index);
+
             Node before = cur.prev;
             before.next = node;
             node.prev = before;
@@ -85,34 +99,31 @@ public class MyLinkedList {
         if (index >= size) {
             return;
         }
-        Node atIndex;
-        atIndex = head;
-        while (index > 0) {
-            atIndex = atIndex.next;
-            index--;
-        }
-        if (atIndex == head) {
+        Node cur;
+        cur = getNode(index);
+
+        if (cur == head) {
             if (head == tail) {
-                atIndex = null;
+                cur = null;
             } else {
-                Node afterIndex = atIndex.next;
+                Node afterIndex = cur.next;
                 afterIndex.prev = null;
                 head = afterIndex;
-                atIndex.next = null;
-                atIndex = null;
+                cur.next = null;
+                cur = null;
             }
-        } else if (atIndex == tail) {
-            Node beforeIndex = atIndex.prev;
+        } else if (cur == tail) {
+            Node beforeIndex = cur.prev;
             beforeIndex.next = null;
-            atIndex.prev = null;
-            atIndex = null;
+            cur.prev = null;
+            cur = null;
             tail = beforeIndex;
         } else {
-            Node beforeIndex = atIndex.prev;
-            Node afterIndex = atIndex.next;
+            Node beforeIndex = cur.prev;
+            Node afterIndex = cur.next;
             beforeIndex.next = afterIndex;
             afterIndex.prev = beforeIndex;
-            atIndex = null;
+            cur = null;
         }
         size--;
     }
